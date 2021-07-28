@@ -24,7 +24,7 @@ router.post('/auth/signup', async (req, res) => {
 
     try {
         const savedUser = await user.save();
-        const accessToken = jwt.sign({userID: savedUser._id, role: savedUser.role}, JWT_SECRET, {expiresIn: '1800s'});
+        const accessToken = jwt.sign({user_id: savedUser._id, role: savedUser.role}, JWT_SECRET, {expiresIn: '1800s'});
   
         res.status(201).json({ error: null, data: { accessToken } });
     } catch(err) {
@@ -41,7 +41,7 @@ router.post('/auth/signin', async (req, res) => {
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) return res.status(400).json({ error: "wrong user/password." });
 
-        const accessToken = jwt.sign({userID: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1800s'});
+        const accessToken = jwt.sign({user_id: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1800s'});
 
         res.status(200).json({ error: null, data: { accessToken,} });
 

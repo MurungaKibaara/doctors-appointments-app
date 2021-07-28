@@ -3,9 +3,6 @@ const expect = chai.expect
 const request = require('supertest')
 const User = require('../../models/users');
 
-
-let user;
-
 describe("User", () => {
 
     after((done) => {

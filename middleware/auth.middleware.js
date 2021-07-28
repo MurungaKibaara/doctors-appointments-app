@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
     const Authorization = req.headers["authorization"]
     const accessToken = Authorization && Authorization.split(' ')[1]
 
-    if (!accessToken) return {"error": "access token required!"}
+    if (!accessToken) return res.status(400).send({"error": "access token required!"})
 
     try {
         const {user_id, role} = jwt.verify(accessToken, JWT_SECRET)
