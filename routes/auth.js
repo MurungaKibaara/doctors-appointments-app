@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/users');
 
-
 require('dotenv').config()
 
 const JWT_SECRET = process.env.JWT_SECRET
@@ -31,6 +30,25 @@ router.post('/auth/signup', async (req, res) => {
     } catch(err) {
         res.status(400).send({error: err})
     }
+})
+
+router.post('/auth/signin', async (req, res) => {
+
+    try {
+        const user = await User.findOne({ email: req.body.email }).exec();
+        if (!user) return res.status(400).json({ error: "user does not exist." });
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if (!validPassword) return res.status(400).json({ error: "wrong user/password." });
+
+        const accessToken = jwt.sign({userID: user._id, role: user.role}, JWT_SECRET, {expiresIn: '1800s'});
+
+        res.status(200).json({ error: null, data: { accessToken,} });
+
+    } catch(err) {
+        res.status(400).send({ error: err})
+    }
+
 })
 
 module.exports = router

@@ -64,4 +64,70 @@ describe("User", () => {
         })
     })
 
+
+    it("should sign in an existing user and return access token", (done) => {
+        request('http://localhost:4000')
+        .post('/api/auth/signin')
+        .send({
+            "email": "murungakibaara@gmail.com",
+            "password": "password"
+        })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(200)
+            expect(res.body.data).to.have.property("accessToken")
+
+            if (err) { done(err) } else { done();}
+        })
+    })
+
+    it("should not sign in a user with wrong password", (done) => {
+        request('http://localhost:4000')
+        .post('/api/auth/signin')
+        .send({
+            "email": "murungakibaara@gmail.com",
+            "password": "wrongpass"
+        })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(400)
+            expect(res.body).to.have.property("error")
+
+            if (err) { done(err) } else { done();}
+        })
+    })
+
+    it("should not sign in a user with missing field", (done) => {
+        request('http://localhost:4000')
+        .post('/api/auth/signin')
+        .send({
+            "email": "murunga@gmail.com",
+        })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(400)
+            expect(res.body).to.have.property("error")
+
+            if (err) { done(err) } else { done();}
+        })
+    })
+
+
+    it("should not sign in a user who doesn't exist", (done) => {
+        request('http://localhost:4000')
+        .post('/api/auth/signin')
+        .send({
+            "email": "murunga@gmail.com",
+            "password": "password"
+        })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(400)
+            expect(res.body).to.have.property("error")
+
+            if (err) { done(err) } else { done();}
+        })
+    })
+
+
+
+
+
+
 })
