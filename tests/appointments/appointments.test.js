@@ -61,4 +61,71 @@ describe("Appointments", () => {
             if (err) {done(err)} else {done()}
         })
     })
+
+    it("should not get appointments without authorization", (done) => {
+        request('http://localhost:4000')
+        .get('/api/appointments')
+        .end((err, res) => {
+            
+            expect(res.status).to.be.eq(400)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+    it("should get appointments with authorization", (done) => {
+        request('http://localhost:4000')
+        .get('/api/appointments')
+        .set({ Authorization: `Bearer ${token}` })
+        .end((err, res) => {
+            for (var i = 0; i < res.body.length; i++) {
+                id = res.body[i]._id;
+            }
+
+            expect(res.status).to.be.eq(200)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+    it("should not update appointments with authorization", (done) => {
+        request('http://localhost:4000')
+        .put(`/api/appointments/${id}`)
+        .send({ state: 'cancelled' })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(400)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+    it("should update appointments with authorization", (done) => {
+        request('http://localhost:4000')
+        .put(`/api/appointments/${id}`)
+        .set({ Authorization: `Bearer ${token}` })
+        .send({ state: 'cancelled' })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(200)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+
+    it("should not delete appointments without authorization", (done) => {
+        request('http://localhost:4000')
+        .delete(`/api/appointments/${id}`)
+        .end((err, res) => {
+            expect(res.status).to.be.eq(400)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+    it("should delete appointments with authorization", (done) => {
+        request('http://localhost:4000')
+        .delete(`/api/appointments/${id}`)
+        .set({ Authorization: `Bearer ${token}` })
+        .end((err, res) => {
+            expect(res.status).to.be.eq(200)
+            if (err) {done(err)} else {done()}
+        })
+    })
+
+
 })
