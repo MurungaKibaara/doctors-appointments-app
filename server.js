@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
   });
 
 app.use('/api', authRoutes);
-app.use('/api', verifyToken, appointmentRoutes);
+// app.use('/api', verifyToken, appointmentRoutes);
 
 const listen = app.listen(process.env.PORT, (req, res) => {
     console.log(`Started:::: ${environment} runnung on port ${process.env.PORT}`)

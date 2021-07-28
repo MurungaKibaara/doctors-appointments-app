@@ -5,7 +5,7 @@ require('dotenv').config()
 const JWT_SECRET = process.env.JWT_SECRET
 
 
-modules.exports = (req, res, next) => {
+module.exports = (req, res, next) => {
 
     const Authorization = req.headers["authorization"]
     const accessToken = Authorization && Authorization.split(' ')[1]
@@ -15,7 +15,7 @@ modules.exports = (req, res, next) => {
     try {
         const {user_id, role} = jwt.verify(accessToken, JWT_SECRET)
         req.role = role;
-        req.userId = user_id;
+        req.user_id= user_id;
 
         next();
 
