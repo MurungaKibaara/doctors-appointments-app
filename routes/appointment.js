@@ -1,10 +1,18 @@
 const router = require('express').Router();
 
+const sendMail = require('../emails/send.mail')
+
 const Appointment = require('../models/appointments');
+const User = require('../models/users');
+
 
 require('dotenv').config()
 
 router.post('/appointments', async (req, res) => {
+
+    const started = new Date(req.body.start).toLocaleDateString()
+    const userInfo = await User.findById({_id: req.user_id})
+
     const appointment = new Appointment({
         user_id: req.user_id,
         start: req.body.start,
@@ -14,6 +22,8 @@ router.post('/appointments', async (req, res) => {
       try {
         const savedAppointment = await appointment.save();
         res.status(201).send({ error: null, data: savedAppointment  });
+
+        console.log(sendMail('appointments', userInfo.email, userInfo.name, started))
 
       } catch (error) {
           res.status(400).send({ error: error });
@@ -29,8 +39,15 @@ router.get('/appointments', async (req, res) => {
     }
     
     try {
-        const appointments = await Appointment.find({user_id: req.user_id}).limit(pagination.limit).skip(pagination.skip).exec()
-        res.status(200).send(appointments);
+        if (req.role == "doctor") {
+            const appointments = await Appointment.find({}).limit(pagination.limit).skip(pagination.skip).exec()
+            res.status(200).send(appointments);
+            return
+
+        } else {
+            const appointments = await Appointment.find({user_id: req.user_id}).limit(pagination.limit).skip(pagination.skip).exec()
+            res.status(200).send(appointments);
+        }
 
     } catch(error) {
         console.log({ error })
