@@ -12,9 +12,9 @@ describe("Appointments", () => {
         request('http://localhost:4000')
         .post('/api/auth/signup')
         .send({
-            name: "tester",
+            name: "Murunga Kibaara",
             role: "user",
-            email: "t@t.com",
+            email: "matatamatata3@gmail.com",
             password: "test"
         })
         .end((err, res) => {

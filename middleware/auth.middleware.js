@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-
 module.exports = (req, res, next) => {
 
     const Authorization = req.headers["authorization"]
