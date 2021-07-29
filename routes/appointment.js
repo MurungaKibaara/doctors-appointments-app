@@ -29,8 +29,15 @@ router.get('/appointments', async (req, res) => {
     }
     
     try {
-        const appointments = await Appointment.find({user_id: req.user_id}).limit(pagination.limit).skip(pagination.skip).exec()
-        res.status(200).send(appointments);
+        if (req.role == "doctor") {
+            const appointments = await Appointment.find({}).limit(pagination.limit).skip(pagination.skip).exec()
+            res.status(200).send(appointments);
+            return
+
+        } else {
+            const appointments = await Appointment.find({user_id: req.user_id}).limit(pagination.limit).skip(pagination.skip).exec()
+            res.status(200).send(appointments);
+        }
 
     } catch(error) {
         console.log({ error })
